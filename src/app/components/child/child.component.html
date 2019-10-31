@@ -1,0 +1,27 @@
+<div class="table-container">
+  <h2>{{ heading | uppercase }}</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Código Padre</th>
+        <th>Descripción Padre</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <td>{{ item.id }}</td>
+        <td>{{ item.title }}</td>
+        <ng-container *ngIf="item.parent; else noValue">
+          <td>{{ item.parent.id }}</td>
+          <td>{{ item.parent.title }}</td>
+        </ng-container>
+        <ng-template #noValue>
+          <td>-</td>
+          <td>-</td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </table>
+</div>
