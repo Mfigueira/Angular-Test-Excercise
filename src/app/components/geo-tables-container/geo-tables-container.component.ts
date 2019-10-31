@@ -10,106 +10,92 @@ import { GeoTable } from 'src/app/interfaces/geo-table-dto';
 })
 export class GeoTablesContainerComponent implements OnInit {
   
-  rawData: Array<string>;
-
-  departments: GeoItem[];
-  provinces: GeoItem[];
-  districts: GeoItem[];
-
+  geoData: Array<string>;
   tables: GeoTable[] = []
 
   constructor( private MainDataService: MainDataService ) { }
 
   ngOnInit() {
-
     this.MainDataService.getTextData().subscribe(data => {
-
-      this.rawData = data.replace(/\"/g, "").split('\n').filter(str => str.trim().length > 0);
-
-      this.buildMainData(this.rawData);
-
-      this.tables = [
-        {
-          heading: "Departamento",
-          tableData: this.departments
-        },
-        {
-          heading: "Provincia",
-          tableData: this.provinces
-        },
-        {
-          heading: "Distrito",
-          tableData: this.districts
-        }
-      ]
-      // console.log("tables: ", this.tables);
-      // console.log("raw data: ", this.rawData);
+      const plainTextToArray = text => text.replace(/\"/g, "").split('\n').filter(str => str.trim().length > 0);
+      this.geoData = plainTextToArray(data);
+      this.buildMainData(this.geoData);
     });
   }
 
-  buildMainData(rawData) {
+  buildGeoTables(departments: GeoItem[], provinces: GeoItem[], districts: GeoItem[]) {
+    this.tables = [
+      {
+        heading: "Departamento",
+        tableData: departments
+      },
+      {
+        heading: "Provincia",
+        tableData: provinces
+      },
+      {
+        heading: "Distrito",
+        tableData: districts
+      }
+    ]
+  }
 
-    var dep: GeoItem[] = [];
-    var prov: GeoItem[] = [];
-    var dist: GeoItem[] = [];
+  buildMainData(geoData: Array<string>) {
+    
+    const parseId = (data: string) => parseInt(data.slice(0, data.indexOf(" ")));
+    const parseTitle = (data: string) => data.slice(data.indexOf(" ")).trim();
+    const foundInArray = (array: GeoItem[], object: GeoItem) => array.find(item => { return item.id === object.id; });
 
-    rawData.forEach(el => {
-      var first = el.slice(0, el.indexOf("/")).trim();
-      var second = el.slice(el.indexOf("/")+1, el.lastIndexOf("/")).trim();
-      var third = el.slice(el.lastIndexOf("/")+1).trim();
+    let departmentArray: GeoItem[] = [];
+    let provinceArray: GeoItem[] = [];
+    let districtArray: GeoItem[] = [];
 
-      if(first) {
-        var depObject: GeoItem = {
-          id: parseInt(first.slice(0, first.indexOf(" "))),
-          title: first.slice(first.indexOf(" ")).trim(),
+    geoData.forEach(str => {
+
+      let departmentData = str.slice(0, str.indexOf("/")).trim();
+      let provinceData = str.slice(str.indexOf("/")+1, str.lastIndexOf("/")).trim();
+      let districtData = str.slice(str.lastIndexOf("/")+1).trim();
+
+      if(departmentData) {
+        let departmentObject: GeoItem = {
+          id: parseId(departmentData),
+          title: parseTitle(departmentData),
           parent: null
         }
-        var found = dep.find(item => { return item.id == depObject.id; })
-        if (!found) { dep.push(depObject); }
+        if (!foundInArray(departmentArray, departmentObject)) { departmentArray.push(departmentObject); }
       }
 
-
-      if(second) {
-        var provObject: GeoItem = {
-          id: parseInt(second.slice(0, second.indexOf(" "))),
-          title: second.slice(second.indexOf(" ")).trim(),
+      if(provinceData) {
+        let provinceObject: GeoItem = {
+          id: parseId(provinceData),
+          title: parseTitle(provinceData),
           parent: {
-            id: parseInt(first.slice(0, first.indexOf(" "))),
-            title: first.slice(first.indexOf(" ")).trim(),
+            id: parseId(departmentData),
+            title: parseTitle(departmentData),
             parent: null
           }
         }
-        var found = prov.find(item => { return item.id == provObject.id; })
-        if (!found) { prov.push(provObject); }
+        if (!foundInArray(provinceArray, provinceObject)) { provinceArray.push(provinceObject); }
       }
 
-
-      if(third) {
-        var distObject: GeoItem = {
-          id: parseInt(third.slice(0, third.indexOf(" "))),
-          title: third.slice(third.indexOf(" ")).trim(),
+      if(districtData) {
+        let districtObject: GeoItem = {
+          id: parseId(districtData),
+          title: parseTitle(districtData),
           parent: {
-            id: parseInt(second.slice(0, second.indexOf(" "))),
-            title: second.slice(second.indexOf(" ")).trim(),
+            id: parseId(provinceData),
+            title: parseTitle(provinceData),
             parent: {
-              id: parseInt(first.slice(0, first.indexOf(" "))),
-              title: first.slice(first.indexOf(" ")).trim(),
+              id: parseId(departmentData),
+              title: parseTitle(departmentData),
               parent: null
             }
           }
         }
-        var found = dist.find(item => { return item.id == distObject.id; })
-        if (!found) { dist.push(distObject); }
+        if (!foundInArray(districtArray, districtObject)) { districtArray.push(districtObject); }
       }
-      // console.log("1: "+first,"2: "+second,"3: "+third);
     });
 
-    // console.log(dep);
-    // console.log(prov);
-    // console.log(dist);
-
-    this.departments = dep;
-    this.provinces = prov;
-    this.districts = dist;
+    this.buildGeoTables(departmentArray, provinceArray, districtArray);
   }
 }
