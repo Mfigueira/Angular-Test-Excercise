@@ -1,5 +1,10 @@
-<child-table
-  *ngFor="let table of tables"
-  [heading]="table.heading"
-  [data]="table.tableData">
-</child-table>
+<ng-container *ngIf="!rawData; else loadedData">
+  <p>loading data...</p>
+</ng-container>
+<ng-template #loadedData>
+  <child-table
+    *ngFor="let table of tables"
+    [heading]="table.heading"
+    [data]="table.tableData">
+  </child-table>
+</ng-template>

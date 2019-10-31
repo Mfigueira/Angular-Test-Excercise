@@ -10,7 +10,7 @@ import { Table } from 'src/app/interfaces/table-dto';
 })
 export class ParentComponent implements OnInit {
   
-  rawData;
+  rawData: Array<string>;
 
   departments: DataObject[];
   provinces: DataObject[];
@@ -21,23 +21,27 @@ export class ParentComponent implements OnInit {
   constructor( private MainDataService: MainDataService ) { }
 
   ngOnInit() {
-    this.rawData = this.MainDataService.get();
-    this.contructMainData(this.rawData);
-    this.tables = [
-      {
-        heading: "Departamento",
-        tableData: this.departments
-      },
-      {
-        heading: "Provincia",
-        tableData: this.provinces
-      },
-      {
-        heading: "Distrito",
-        tableData: this.districts
-      }
-    ]
-    console.log(this.tables);
+
+    this.MainDataService.getTextData().subscribe(data => {
+      this.rawData = data.replace(/\"/g, "").split('\n').filter(e => e.trim().length > 0);
+      this.contructMainData(this.rawData);
+      this.tables = [
+        {
+          heading: "Departamento",
+          tableData: this.departments
+        },
+        {
+          heading: "Provincia",
+          tableData: this.provinces
+        },
+        {
+          heading: "Distrito",
+          tableData: this.districts
+        }
+      ]
+      // console.log("tables: ", this.tables);
+      // console.log("raw data: ", this.rawData);
+    });
   }
 
   contructMainData(rawData) {
@@ -94,7 +98,6 @@ export class ParentComponent implements OnInit {
         var found = dist.find(item => { return item.id == distObject.id; })
         if (!found) { dist.push(distObject); }
       }
-
       // console.log("1: "+first,"2: "+second,"3: "+third);
     });
 
@@ -105,7 +108,5 @@ export class ParentComponent implements OnInit {
     this.departments = dep;
     this.provinces = prov;
     this.districts = dist;
-
   }
-
 }
