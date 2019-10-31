@@ -1,30 +1,33 @@
-import { MainDataService } from './../../services/main-data.service';
+import { MainDataService } from '../../services/main-data.service';
 import { Component, OnInit } from '@angular/core';
-import { DataObject } from 'src/app/interfaces/data-object';
-import { Table } from 'src/app/interfaces/table-dto';
+import { GeoItem } from 'src/app/interfaces/geo-item';
+import { GeoTable } from 'src/app/interfaces/geo-table-dto';
 
 @Component({
-  selector: 'app-parent',
-  templateUrl: './parent.component.html',
-  styleUrls: ['./parent.component.scss']
+  selector: 'geo-tables-container',
+  templateUrl: './geo-tables-container.component.html',
+  styleUrls: ['./geo-tables-container.component.scss']
 })
-export class ParentComponent implements OnInit {
+export class GeoTablesContainerComponent implements OnInit {
   
   rawData: Array<string>;
 
-  departments: DataObject[];
-  provinces: DataObject[];
-  districts: DataObject[];
+  departments: GeoItem[];
+  provinces: GeoItem[];
+  districts: GeoItem[];
 
-  tables: Table[] = []
+  tables: GeoTable[] = []
 
   constructor( private MainDataService: MainDataService ) { }
 
   ngOnInit() {
 
     this.MainDataService.getTextData().subscribe(data => {
-      this.rawData = data.replace(/\"/g, "").split('\n').filter(e => e.trim().length > 0);
-      this.contructMainData(this.rawData);
+
+      this.rawData = data.replace(/\"/g, "").split('\n').filter(str => str.trim().length > 0);
+
+      this.buildMainData(this.rawData);
+
       this.tables = [
         {
           heading: "Departamento",
@@ -44,11 +47,11 @@ export class ParentComponent implements OnInit {
     });
   }
 
-  contructMainData(rawData) {
+  buildMainData(rawData) {
 
-    var dep: DataObject[] = [];
-    var prov: DataObject[] = [];
-    var dist: DataObject[] = [];
+    var dep: GeoItem[] = [];
+    var prov: GeoItem[] = [];
+    var dist: GeoItem[] = [];
 
     rawData.forEach(el => {
       var first = el.slice(0, el.indexOf("/")).trim();
@@ -56,7 +59,7 @@ export class ParentComponent implements OnInit {
       var third = el.slice(el.lastIndexOf("/")+1).trim();
 
       if(first) {
-        var depObject: DataObject = {
+        var depObject: GeoItem = {
           id: parseInt(first.slice(0, first.indexOf(" "))),
           title: first.slice(first.indexOf(" ")).trim(),
           parent: null
@@ -67,7 +70,7 @@ export class ParentComponent implements OnInit {
 
 
       if(second) {
-        var provObject: DataObject = {
+        var provObject: GeoItem = {
           id: parseInt(second.slice(0, second.indexOf(" "))),
           title: second.slice(second.indexOf(" ")).trim(),
           parent: {
@@ -82,7 +85,7 @@ export class ParentComponent implements OnInit {
 
 
       if(third) {
-        var distObject: DataObject = {
+        var distObject: GeoItem = {
           id: parseInt(third.slice(0, third.indexOf(" "))),
           title: third.slice(third.indexOf(" ")).trim(),
           parent: {

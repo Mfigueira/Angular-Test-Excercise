@@ -4,15 +4,15 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ChildComponent } from './components/child/child.component';
-import { ParentComponent } from './components/parent/parent.component';
+import { GeoTableComponent } from './components/geo-table/geo-table.component';
+import { GeoTablesContainerComponent } from './components/geo-tables-container/geo-tables-container.component';
 import { LandingComponent } from './components/landing/landing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChildComponent,
-    ParentComponent,
+    GeoTableComponent,
+    GeoTablesContainerComponent,
     LandingComponent
   ],
   imports: [

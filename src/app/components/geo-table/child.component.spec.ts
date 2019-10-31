@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChildComponent } from './child.component';
+import { ChildComponent } from './geo-table.component';
 
 describe('ChildComponent', () => {
   let component: ChildComponent;

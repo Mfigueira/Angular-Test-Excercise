@@ -2,9 +2,9 @@
   <p>loading data...</p>
 </ng-container>
 <ng-template #loadedData>
-  <child-table
+  <geo-table
     *ngFor="let table of tables"
     [heading]="table.heading"
     [data]="table.tableData">
-  </child-table>
+  </geo-table>
 </ng-template>

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ParentComponent } from './parent.component';
+import { GeoTablesContainerComponent } from './geo-tables-container.component';
 
-describe('ParentComponent', () => {
-  let component: ParentComponent;
-  let fixture: ComponentFixture<ParentComponent>;
+describe('GeoTablesContainerComponent', () => {
+  let component: GeoTablesContainerComponent;
+  let fixture: ComponentFixture<GeoTablesContainerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ParentComponent ]
+      declarations: [ GeoTablesContainerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ParentComponent);
+    fixture = TestBed.createComponent(GeoTablesContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
