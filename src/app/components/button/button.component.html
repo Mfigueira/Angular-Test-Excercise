@@ -1,0 +1,22 @@
+<!-- <div class="d-inline-block w-25 btn-container">
+  <label>
+    Server Name: {{ serverName }}
+    <input type="text" class="form-control" (input)="onUpdateServerName($event)">
+    <input [(ngModel)]="serverName" type="text" class="form-control">
+  </label>
+  <button class="btn btn-danger" [disabled]="!allowNewServer" (click)="onButtonClicked()">
+    Add Server {{ allowNewServer }}
+  </button>
+  <p [ngClass]="{ online: serverStatus === 1 }" [ngStyle]="{ backgroundColor: setColor() }">
+    Status: {{ buttonStatus }}
+  </p>
+</div> -->
+
+<div class="d-inline-block w-25 btn-container">
+  <button (click)="onButtonClicked()">Display Details</button>
+  <p *ngIf="displayDetails">Details toggled</p>
+  <p *ngFor="let detail of details; let i = index" [ngClass]="{ online: i >= 5 }"
+    [ngStyle]="{ backgroundColor: i >= 5 ? 'blue' : 'transparent' }">
+    {{ detail }}
+  </p>
+</div>

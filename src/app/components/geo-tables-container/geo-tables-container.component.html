@@ -1,10 +1,9 @@
 <ng-container *ngIf="!geoData; else loadedData">
-  <p>loading data...</p>
+  <div class="p-3 text-center">
+    <p>Loading data...</p>
+  </div>
 </ng-container>
 <ng-template #loadedData>
-  <geo-table
-    *ngFor="let table of tables"
-    [heading]="table.heading"
-    [data]="table.tableData">
+  <geo-table *ngFor="let table of tables" [heading]="table.heading" [data]="table.tableData">
   </geo-table>
 </ng-template>
